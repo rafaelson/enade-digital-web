@@ -9,14 +9,23 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AlternativasProps from "../interfaces/AlternativasProps";
+import { useEffect, useState } from "react";
 
 export default function Alternativas(props: AlternativasProps) {
+  const [value, setValue] = useState("");
+
+  useEffect(() => setValue(""), [props.questaoAtual]);
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(1),
     color: theme.palette.text.secondary,
   }));
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
 
   return (
     <Box
@@ -27,7 +36,7 @@ export default function Alternativas(props: AlternativasProps) {
       }}
     >
       <FormControl sx={{ maxHeight: "100%", width: "100%" }}>
-        <RadioGroup>
+        <RadioGroup value={value} onChange={handleChange}>
           <Stack spacing={1} useFlexGap>
             <Item>
               <FormControlLabel
