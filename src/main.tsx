@@ -6,10 +6,16 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-//import Prova from "./routes/Prova.tsx";
+import Prova from "./routes/Prova.tsx";
 import Root from "./routes/Root.tsx";
 
-const router = createBrowserRouter([{ path: "/", element: <Root /> }]);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+  },
+  { path: "/prova", element: <Prova /> },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

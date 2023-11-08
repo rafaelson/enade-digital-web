@@ -27,6 +27,21 @@ export default function Alternativas(props: AlternativasProps) {
     setValue((event.target as HTMLInputElement).value);
   };
 
+  //@ts-ignore
+  const checaImagem = (alternativa) => {
+    const imageCheck = alternativa.alternativa.match(/IMAGE-(\d+)/);
+
+    if (imageCheck) {
+      return (
+        <img
+          src={`${props.localizacaoAssets}${props.numeroQuestao}-${imageCheck[1]}.jpg`}
+        />
+      );
+    } else {
+      return `${alternativa.letra.toUpperCase()}) ${alternativa.alternativa}`;
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -42,7 +57,8 @@ export default function Alternativas(props: AlternativasProps) {
               <FormControlLabel
                 value="a"
                 control={<Radio />}
-                label={`a) ${props.alternativas[0]}`}
+                label={checaImagem(props.alternativas[0])}
+                sx={{ width: "100%" }}
               />
             </Item>
 
@@ -50,28 +66,32 @@ export default function Alternativas(props: AlternativasProps) {
               <FormControlLabel
                 value="b"
                 control={<Radio />}
-                label={`b) ${props.alternativas[1]}`}
+                label={checaImagem(props.alternativas[1])}
+                sx={{ width: "100%" }}
               />
             </Item>
             <Item>
               <FormControlLabel
                 value="c"
                 control={<Radio />}
-                label={`c) ${props.alternativas[2]}`}
+                label={checaImagem(props.alternativas[2])}
+                sx={{ width: "100%" }}
               />
             </Item>
             <Item>
               <FormControlLabel
                 value="d"
                 control={<Radio />}
-                label={`d) ${props.alternativas[3]}`}
+                label={checaImagem(props.alternativas[3])}
+                sx={{ width: "100%" }}
               />
             </Item>
             <Item>
               <FormControlLabel
                 value="e"
                 control={<Radio />}
-                label={`e) ${props.alternativas[4]}`}
+                label={checaImagem(props.alternativas[4])}
+                sx={{ width: "100%" }}
               />
             </Item>
           </Stack>

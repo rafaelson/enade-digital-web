@@ -8,7 +8,11 @@ export default function Enunciado(props: EnunciadoProps) {
       const imageCheck = part.match(/IMAGE-(\d+)/);
 
       if (imageCheck) {
-        return <img src={`../public/${imageCheck[1]}.jpg`} />;
+        return (
+          <img
+            src={`${props.localizacaoAssets}${props.numeroQuestao}-${imageCheck[1]}.jpg`}
+          />
+        );
       } else {
         return (
           <>

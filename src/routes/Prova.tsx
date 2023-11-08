@@ -1,15 +1,13 @@
 import { Container, Box, Paper, Fab } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useState } from "react";
-import "../App.css";
 import Enunciado from "../components/Enunciado";
 import Alternativas from "../components/Alternativas";
-import jsonData from "../data.json";
-const jsonString = `[${jsonData}]`;
+import { useLocation } from "react-router-dom";
 
 export default function Prova() {
-  const prova = JSON.parse(jsonString);
-  console.log(prova);
+  const location = useLocation();
+  const prova = location.state.prova;
   const [questaoAtual, setQuestaoAtual] = useState(0);
 
   return (
@@ -18,11 +16,14 @@ export default function Prova() {
         <Paper elevation={0} sx={{ padding: "5px" }}>
           <Enunciado
             questaoAtual={questaoAtual}
-            numeroQuestao={prova[questaoAtual].numeroQuestao}
+            numeroQuestao={prova[questaoAtual].numero}
             enunciado={prova[questaoAtual].enunciado}
+            localizacaoAssets={prova[questaoAtual].localizacaoAssets}
           />
           <Alternativas
             questaoAtual={questaoAtual}
+            numeroQuestao={prova[questaoAtual].numero}
+            localizacaoAssets={prova[questaoAtual].localizacaoAssets}
             alternativas={prova[questaoAtual].alternativas}
             gabarito={prova[questaoAtual].gabarito}
           />
