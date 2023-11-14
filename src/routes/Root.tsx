@@ -33,7 +33,10 @@ export default function Root() {
       });
       const responseJson = await response.text();
       const responseObj = JSON.parse(responseJson);
-      localStorage.setItem("sessao", JSON.stringify(responseObj[2]));
+      localStorage.setItem("sessao", responseObj[2].idSessao);
+      localStorage.setItem("provas", responseObj[2].provas);
+      localStorage.setItem("tempoExpiracao", responseObj[2].tempoExpiracao);
+
       const prova = [responseObj[0][0], responseObj[1][0]];
 
       const soQuestoes = [];

@@ -14,7 +14,12 @@ import { useEffect, useState } from "react";
 export default function Alternativas(props: AlternativasProps) {
   const [value, setValue] = useState("");
 
-  useEffect(() => setValue(""), [props.questaoAtual]);
+  useEffect(() => {
+    if (props.respostas[props.questaoAtual] !== undefined) {
+      if (props.respostas[props.questaoAtual].resposta != "")
+        setValue(props.respostas[props.questaoAtual].resposta);
+    } else setValue("");
+  }, [props.questaoAtual]);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -25,6 +30,12 @@ export default function Alternativas(props: AlternativasProps) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
+    const respostasAtualizadas = [...props.respostas];
+    respostasAtualizadas[props.questaoAtual] = {
+      questaoId: props.idQuestao,
+      resposta: (event.target as HTMLInputElement).value,
+    };
+    props.setRespostas(respostasAtualizadas);
   };
 
   //@ts-ignore
