@@ -13,12 +13,24 @@ import { useEffect, useState } from "react";
 
 export default function Alternativas(props: AlternativasProps) {
   const [value, setValue] = useState("");
+  const [alternativaCor, setAlternativaCor] = useState({
+    a: "initial",
+    b: "initial",
+    c: "initial",
+    d: "initial",
+    e: "initial",
+  });
 
   useEffect(() => {
     if (props.respostas[props.questaoAtual] !== undefined) {
-      if (props.respostas[props.questaoAtual].resposta != "")
+      if (props.respostas[props.questaoAtual].resposta != "") {
         setValue(props.respostas[props.questaoAtual].resposta);
-    } else setValue("");
+        trocarCorBorda(props.respostas[props.questaoAtual].resposta);
+      }
+    } else {
+      setValue("");
+      trocarCorBorda("");
+    }
   }, [props.questaoAtual]);
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -26,15 +38,39 @@ export default function Alternativas(props: AlternativasProps) {
     ...theme.typography.body2,
     padding: theme.spacing(1),
     color: theme.palette.text.secondary,
+    border: "2px",
+    borderStyle: "solid",
   }));
 
+  const trocarCorBorda = (value: string) => {
+    const alternativasCores = alternativaCor;
+    if (value != "") {
+      //@ts-ignore
+      alternativasCores[value] = "#0288d1";
+      for (const alternativa in alternativasCores) {
+        if (alternativa != value) {
+          //@ts-ignore
+          alternativasCores[alternativa] = "initial";
+        }
+      }
+    } else {
+      for (const alternativa in alternativasCores) {
+        //@ts-ignore
+        alternativasCores[alternativa] = "initial";
+      }
+    }
+    setAlternativaCor(alternativasCores);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    setValue(value);
     const respostasAtualizadas = [...props.respostas];
     respostasAtualizadas[props.questaoAtual] = {
       questaoId: props.idQuestao,
-      resposta: (event.target as HTMLInputElement).value,
+      resposta: value,
     };
+    trocarCorBorda(value);
     props.setRespostas(respostasAtualizadas);
   };
 
@@ -64,7 +100,7 @@ export default function Alternativas(props: AlternativasProps) {
       <FormControl sx={{ maxHeight: "100%", width: "100%" }}>
         <RadioGroup value={value} onChange={handleChange}>
           <Stack spacing={1} useFlexGap>
-            <Item>
+            <Item sx={{ borderColor: alternativaCor.a }}>
               <FormControlLabel
                 value="a"
                 control={<Radio />}
@@ -73,7 +109,7 @@ export default function Alternativas(props: AlternativasProps) {
               />
             </Item>
 
-            <Item>
+            <Item sx={{ borderColor: alternativaCor.b }}>
               <FormControlLabel
                 value="b"
                 control={<Radio />}
@@ -81,7 +117,7 @@ export default function Alternativas(props: AlternativasProps) {
                 sx={{ width: "100%" }}
               />
             </Item>
-            <Item>
+            <Item sx={{ borderColor: alternativaCor.c }}>
               <FormControlLabel
                 value="c"
                 control={<Radio />}
@@ -89,7 +125,7 @@ export default function Alternativas(props: AlternativasProps) {
                 sx={{ width: "100%" }}
               />
             </Item>
-            <Item>
+            <Item sx={{ borderColor: alternativaCor.d }}>
               <FormControlLabel
                 value="d"
                 control={<Radio />}
@@ -97,7 +133,7 @@ export default function Alternativas(props: AlternativasProps) {
                 sx={{ width: "100%" }}
               />
             </Item>
-            <Item>
+            <Item sx={{ borderColor: alternativaCor.e }}>
               <FormControlLabel
                 value="e"
                 control={<Radio />}
