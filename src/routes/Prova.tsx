@@ -1,4 +1,4 @@
-import { Container, Box, Paper, Fab } from "@mui/material";
+import { Container, Box, Paper, Fab, Typography } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useState } from "react";
 import Enunciado from "../components/Enunciado";
@@ -12,13 +12,15 @@ export default function Prova() {
   const [questaoAtual, setQuestaoAtual] = useState(0);
   //@ts-ignore
   const [respostas, setRespostas] = useState(Array.from(Array(prova.length)));
+  const [resultado, setResultado] = useState(undefined);
   const [alertaConclusao, setAlertaConclusao] = useState(false);
+  const [resultadoVisivel, setResultadoVisivel] = useState("hidden");
 
   const handleClickOpen = () => {
     setAlertaConclusao(true);
   };
 
-  const handleClose = async (provaFinalizada: boolean) => {
+  const handleAlertaConclusaoClose = async (provaFinalizada: boolean) => {
     if (provaFinalizada) {
       setAlertaConclusao(false);
       const myHeaders = new Headers();
@@ -34,8 +36,11 @@ export default function Prova() {
         redirect: "follow",
       });
       const responseJson = await response.text();
-      const responseObj = JSON.parse(responseJson);
-      console.log(responseObj);
+      const resultado = JSON.parse(responseJson);
+      console.log(resultado);
+      setResultado(resultado);
+      setQuestaoAtual(0);
+      setResultadoVisivel("visible");
     }
     setAlertaConclusao(false);
   };
@@ -44,8 +49,35 @@ export default function Prova() {
     <>
       <AlertaConclusao
         alertaConclusao={alertaConclusao}
-        handleClose={handleClose}
+        handleClose={handleAlertaConclusaoClose}
       />
+
+      {/* eu sei que isso está péssimo */}
+      <Box
+        position={"absolute"}
+        left={0}
+        top={0}
+        marginLeft="10px"
+        marginTop="10px"
+        //@ts-ignore
+        visibility={resultadoVisivel}
+      >
+        <Typography>
+          {/* @ts-ignore */}
+          Acertos: {resultado !== undefined ? resultado.acertos : "Indefinido"}
+        </Typography>
+        <Typography>
+          Total de questões: {/* @ts-ignore */}
+          {resultado !== undefined ? resultado.totalQuestoes : "Indefinido"}
+        </Typography>
+        <Typography>
+          Taxa de Acertos:
+          {resultado !== undefined //@ts-ignore
+            ? ((resultado.acertos / resultado.totalQuestoes) * 100).toFixed(2) +
+              "%"
+            : "Indefinido"}
+        </Typography>
+      </Box>
       <Container maxWidth="md">
         <Paper elevation={0} sx={{ padding: "5px" }}>
           <Enunciado
@@ -96,7 +128,7 @@ export default function Prova() {
             <ArrowForward />
           </Fab>
         </Box>
-        <Fab variant="extended" color="success" onClick={handleClickOpen}>
+        <Fab variant="extended" color="primary" onClick={handleClickOpen}>
           Finalizar
         </Fab>
       </Box>
