@@ -4,9 +4,12 @@ import { useState } from "react";
 import Enunciado from "../components/Enunciado";
 import Alternativas from "../components/Alternativas";
 import AlertaConclusao from "../components/AlertaConclusao";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cronometro from "../components/Cronometro";
+import AlertaSair from "../components/AlertaSair";
 
 export default function Prova() {
+  const navigate = useNavigate();
   const location = useLocation();
   const prova = location.state.prova;
   const [questaoAtual, setQuestaoAtual] = useState(0);
@@ -15,9 +18,11 @@ export default function Prova() {
   const [resultado, setResultado] = useState(undefined);
   const [alertaConclusao, setAlertaConclusao] = useState(false);
   const [resultadoVisivel, setResultadoVisivel] = useState("hidden");
+  const [alertaSair, setAlertaSair] = useState(false);
 
   const handleClickOpen = () => {
-    setAlertaConclusao(true);
+    if (resultado != undefined) setAlertaSair(true);
+    else setAlertaConclusao(true);
   };
 
   const handleAlertaConclusaoClose = async (provaFinalizada: boolean) => {
@@ -45,12 +50,20 @@ export default function Prova() {
     setAlertaConclusao(false);
   };
 
+  const handleAlertaSairClose = (sair: boolean) => {
+    setAlertaSair(false);
+    if (sair) {
+      navigate("/");
+    }
+  };
+
   return (
     <>
       <AlertaConclusao
         alertaConclusao={alertaConclusao}
         handleClose={handleAlertaConclusaoClose}
       />
+      <AlertaSair alertaSair={alertaSair} handleClose={handleAlertaSairClose} />
 
       {/* eu sei que isso está péssimo */}
       <Box
@@ -78,6 +91,17 @@ export default function Prova() {
             : "Indefinido"}
         </Typography>
       </Box>
+      <Box
+        position={"absolute"}
+        right={0}
+        top={0}
+        marginRight="10px"
+        marginTop="10px"
+      >
+        <Cronometro
+          tempoLimite={Number.parseInt(localStorage.getItem("tempoExpiracao")!)}
+        />
+      </Box>
       <Container maxWidth="md">
         <Paper elevation={0} sx={{ padding: "5px" }}>
           <Enunciado
@@ -92,9 +116,9 @@ export default function Prova() {
             numeroQuestao={prova[questaoAtual].numero}
             localizacaoAssets={prova[questaoAtual].localizacaoAssets}
             alternativas={prova[questaoAtual].alternativas}
-            gabarito={prova[questaoAtual].gabarito}
             provaId={prova[questaoAtual].provaId}
             respostas={respostas}
+            resultado={resultado}
             setRespostas={setRespostas}
           />
         </Paper>
@@ -129,7 +153,7 @@ export default function Prova() {
           </Fab>
         </Box>
         <Fab variant="extended" color="primary" onClick={handleClickOpen}>
-          Finalizar
+          {resultado !== undefined ? "Sair" : "Finalizar"}
         </Fab>
       </Box>
     </>

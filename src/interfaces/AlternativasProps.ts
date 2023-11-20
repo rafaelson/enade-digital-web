@@ -6,7 +6,7 @@ export default interface AlternativasProps {
   idQuestao: string;
   alternativas: any;
   respostas: any;
+  resultado: any;
   setRespostas: any;
   provaId: string;
-  gabarito: string;
 }
