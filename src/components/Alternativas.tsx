@@ -10,23 +10,28 @@ import {
 import { styled } from "@mui/material/styles";
 import AlternativasProps from "../interfaces/AlternativasProps";
 import { useEffect, useState } from "react";
+import Questao from "../interfaces/Questao";
+import AlternativaCor from "../interfaces/AlternativaCor";
+import AlternativasDisabled from "../interfaces/AlternativasDisabled";
+import Alternativa from "../interfaces/Alternativa";
 
 export default function Alternativas(props: AlternativasProps) {
   const [value, setValue] = useState("");
-  const [alternativaCor, setAlternativaCor] = useState({
+  const [alternativaCor, setAlternativaCor] = useState<AlternativaCor>({
     a: "initial",
     b: "initial",
     c: "initial",
     d: "initial",
     e: "initial",
   });
-  const [alternativasDisabled, setAlternativasDisabled] = useState({
-    a: false,
-    b: false,
-    c: false,
-    d: false,
-    e: false,
-  });
+  const [alternativasDisabled, setAlternativasDisabled] =
+    useState<AlternativasDisabled>({
+      a: false,
+      b: false,
+      c: false,
+      d: false,
+      e: false,
+    });
 
   useEffect(() => {
     if (props.respostas[props.questaoAtual] !== undefined) {
@@ -38,8 +43,7 @@ export default function Alternativas(props: AlternativasProps) {
         if (props.resultado != undefined) {
           // prova finalizada
           const questao = props.resultado.questoes.find(
-            //@ts-ignore
-            (questao) => questao.id == props.idQuestao
+            (questao: Questao) => questao.id == props.idQuestao
           );
           if (questao) {
             let respostaCorreta;
@@ -66,8 +70,7 @@ export default function Alternativas(props: AlternativasProps) {
       if (props.resultado != undefined) {
         //prova finalizada
         const questao = props.resultado.questoes.find(
-          //@ts-ignore
-          (questao) => questao.id == props.idQuestao
+          (questao: Questao) => questao.id == props.idQuestao
         );
         if (questao) {
           for (const alternativa in alternativaCor) {
@@ -93,8 +96,8 @@ export default function Alternativas(props: AlternativasProps) {
   const disableAlternativas = () => {
     const novaAlternativasDisabled = alternativasDisabled;
     for (const alternativa in novaAlternativasDisabled) {
-      //@ts-ignore
-      novaAlternativasDisabled[alternativa] = true;
+      novaAlternativasDisabled[alternativa as keyof AlternativasDisabled] =
+        true;
     }
     setAlternativasDisabled(novaAlternativasDisabled);
   };
@@ -108,21 +111,22 @@ export default function Alternativas(props: AlternativasProps) {
     const alternativasCores = alternativaCor;
     if (value != "") {
       //@ts-ignore
-      alternativasCores[value] = cores[cor];
+      alternativasCores[value as keyof AlternativaCor] = cores[cor];
       for (const alternativa in alternativasCores) {
         if (alternativa != value) {
-          //@ts-ignore
-          if (alternativasCores[alternativa] != "initial" && errado) {
+          if (
+            alternativasCores[alternativa as keyof AlternativaCor] !=
+              "initial" &&
+            errado
+          ) {
             continue;
           }
-          //@ts-ignore
-          alternativasCores[alternativa] = "initial";
+          alternativasCores[alternativa as keyof AlternativaCor] = "initial";
         }
       }
     } else {
       for (const alternativa in alternativasCores) {
-        //@ts-ignore
-        alternativasCores[alternativa] = "initial";
+        alternativasCores[alternativa as keyof AlternativaCor] = "initial";
       }
     }
     setAlternativaCor(alternativasCores);
@@ -140,8 +144,7 @@ export default function Alternativas(props: AlternativasProps) {
     props.setRespostas(respostasAtualizadas);
   };
 
-  //@ts-ignore
-  const checaImagem = (alternativa) => {
+  const checaImagem = (alternativa: Alternativa) => {
     const imageCheck = alternativa.alternativa.match(/IMAGE-(\d+)/);
 
     if (imageCheck) {

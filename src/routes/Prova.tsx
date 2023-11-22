@@ -7,17 +7,22 @@ import AlertaConclusao from "../components/AlertaConclusao";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cronometro from "../components/Cronometro";
 import AlertaSair from "../components/AlertaSair";
+import Resposta from "../interfaces/Resposta";
+import Resultado from "../interfaces/Resultado";
 
 export default function Prova() {
   const navigate = useNavigate();
   const location = useLocation();
   const prova = location.state.prova;
   const [questaoAtual, setQuestaoAtual] = useState(0);
-  //@ts-ignore
-  const [respostas, setRespostas] = useState(Array.from(Array(prova.length)));
-  const [resultado, setResultado] = useState(undefined);
+  const [respostas, setRespostas] = useState<Resposta[]>(
+    Array.from(Array(prova.length))
+  );
+  const [resultado, setResultado] = useState<Resultado | undefined>(undefined);
   const [alertaConclusao, setAlertaConclusao] = useState(false);
-  const [resultadoVisivel, setResultadoVisivel] = useState("hidden");
+  const [resultadoVisivel, setResultadoVisivel] = useState<
+    "visible" | "hidden"
+  >("hidden");
   const [alertaSair, setAlertaSair] = useState(false);
 
   const handleClickOpen = () => {
@@ -65,27 +70,24 @@ export default function Prova() {
       />
       <AlertaSair alertaSair={alertaSair} handleClose={handleAlertaSairClose} />
 
-      {/* eu sei que isso está péssimo */}
       <Box
         position={"absolute"}
         left={0}
         top={0}
         marginLeft="10px"
         marginTop="10px"
-        //@ts-ignore
         visibility={resultadoVisivel}
       >
         <Typography>
-          {/* @ts-ignore */}
           Acertos: {resultado !== undefined ? resultado.acertos : "Indefinido"}
         </Typography>
         <Typography>
-          Total de questões: {/* @ts-ignore */}
+          Total de questões:
           {resultado !== undefined ? resultado.totalQuestoes : "Indefinido"}
         </Typography>
         <Typography>
           Taxa de Acertos:
-          {resultado !== undefined //@ts-ignore
+          {resultado !== undefined
             ? ((resultado.acertos / resultado.totalQuestoes) * 100).toFixed(2) +
               "%"
             : "Indefinido"}

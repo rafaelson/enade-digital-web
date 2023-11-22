@@ -77,8 +77,6 @@ export default function Root() {
           display="flex"
           flexDirection="column"
           height="100%"
-          // paddingLeft="45px"
-          // paddingRight="45px"
           padding="15%"
           gap="25px"
         >
